@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyStore</title>
+    <title>MyStore Fresh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,89 +16,118 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
       body {
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
       }
     </style>
   </head>
-  <body class="bg-slate-100 text-slate-800">
+  <body class="bg-slate-100 text-slate-900">
     <div id="root"></div>
 
     <script type="text/babel">
-      const { useState } = React;
+      const { useMemo, useState } = React;
 
-      const products = [
+      const catalog = [
         {
           id: 1,
-          name: 'Running Shoes',
-          price: '₹7,499',
-          image: 'https://images.unsplash.com/photo-1460353581641-37baddab0fa2',
-          cta: 'Add to Cart',
+          name: "Running Shoes",
+          price: 7499,
+          image: "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=1000&q=80",
+          tag: "Top Pick",
+          action: "Add to Cart",
         },
         {
           id: 2,
-          name: 'Laptop',
-          price: '₹64,999',
-          image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8',
-          cta: 'Add to Cart',
+          name: "Laptop",
+          price: 64999,
+          image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80",
+          tag: "Best Seller",
+          action: "Add to Cart",
         },
         {
           id: 3,
-          name: 'Headphones',
-          price: '₹9,999',
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
-          cta: 'Add to Cart',
+          name: "Headphones",
+          price: 9999,
+          image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=80",
+          tag: "New",
+          action: "Add to Cart",
+        },
+        {
+          id: 4,
+          name: "Gaming Keyboard",
+          price: 4999,
+          image: "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1000&q=80",
+          tag: "Trending",
+          action: "Add to Cart",
         },
       ];
 
       const deals = [
         {
-          id: 4,
-          name: 'Laptop Pro Deal',
-          oldPrice: '₹79,999',
-          price: '₹64,999',
-          image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853',
-          badge: '19% OFF',
-          cta: 'Grab Deal',
+          id: 11,
+          name: "Laptop Pro Deal",
+          oldPrice: 79999,
+          price: 64999,
+          image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1000&q=80",
+          discount: "19% OFF",
+          action: "Grab Deal",
         },
         {
-          id: 5,
-          name: 'Air Jordans',
-          oldPrice: '₹18,000',
-          price: '₹14,499',
-          image: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519',
-          badge: '20% OFF',
-          cta: 'Grab Deal',
+          id: 12,
+          name: "Air Jordans",
+          oldPrice: 18000,
+          price: 14499,
+          image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1000&q=80",
+          discount: "20% OFF",
+          action: "Grab Deal",
         },
       ];
 
-      function ProductCard({ item, onAdd }) {
+      const money = (amount) => `₹${amount.toLocaleString("en-IN")}`;
+
+      function Header({ count }) {
         return (
-          <article className="relative rounded-2xl bg-white p-5 shadow-lg transition hover:-translate-y-2">
-            {item.badge && (
-              <span className="absolute left-4 top-4 rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">
-                {item.badge}
-              </span>
-            )}
-            <img
-              src={item.image}
-              alt={item.name}
-              className="h-52 w-full rounded-xl object-cover"
-            />
-            <h3 className="mt-4 text-xl font-semibold">{item.name}</h3>
-            {item.oldPrice ? (
-              <p className="mt-2 text-base">
-                <span className="mr-2 text-sm text-slate-400 line-through">{item.oldPrice}</span>
-                <span className="font-bold text-sky-500">{item.price}</span>
-              </p>
-            ) : (
-              <p className="mt-2 font-bold text-sky-500">{item.price}</p>
-            )}
-            <button
-              onClick={onAdd}
-              className="mt-4 w-full rounded-lg bg-slate-900 px-4 py-2 text-white transition hover:bg-cyan-500"
-            >
-              {item.cta}
-            </button>
+          <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/95 px-4 py-4 text-white backdrop-blur md:px-12">
+            <div className="mx-auto flex max-w-6xl items-center justify-between">
+              <p className="text-2xl font-bold tracking-wide text-cyan-400">MyStore</p>
+              <nav className="hidden md:block">
+                <ul className="flex gap-8 text-sm">
+                  <li><a className="hover:text-cyan-300" href="#home">Home</a></li>
+                  <li><a className="hover:text-cyan-300" href="#shop">Shop</a></li>
+                  <li><a className="hover:text-cyan-300" href="#deals">Deals</a></li>
+                  <li><a className="hover:text-cyan-300" href="#contact">Contact</a></li>
+                </ul>
+              </nav>
+              <div className="relative text-2xl" aria-label="cart">🛒
+                <span className="absolute -right-3 -top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">{count}</span>
+              </div>
+            </div>
+          </header>
+        );
+      }
+
+      function Card({ item, onAdd, isDeal = false }) {
+        return (
+          <article className="group overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-2xl">
+            <div className="relative">
+              {isDeal ? (
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">{item.discount}</span>
+              ) : (
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white">{item.tag}</span>
+              )}
+              <img src={item.image} alt={item.name} className="h-52 w-full object-cover" />
+            </div>
+            <div className="space-y-2 p-5">
+              <h3 className="text-xl font-semibold">{item.name}</h3>
+              {isDeal ? (
+                <p>
+                  <span className="mr-2 text-sm text-slate-400 line-through">{money(item.oldPrice)}</span>
+                  <span className="font-bold text-cyan-600">{money(item.price)}</span>
+                </p>
+              ) : (
+                <p className="font-bold text-cyan-600">{money(item.price)}</p>
+              )}
+              <button onClick={onAdd} className="w-full rounded-lg bg-slate-900 px-4 py-2 text-white transition hover:bg-cyan-500">{item.action}</button>
+            </div>
           </article>
         );
       }
@@ -104,90 +135,70 @@
       function App() {
         const [cartCount, setCartCount] = useState(0);
 
-        const addToCart = () => setCartCount((count) => count + 1);
-
-        const scrollToSection = (id) => {
-          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-        };
+        const featuredCount = useMemo(() => catalog.length + deals.length, []);
+        const handleAdd = () => setCartCount((prev) => prev + 1);
+        const goToShop = () => document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
 
         return (
           <>
-            <header className="sticky top-0 z-50 flex items-center justify-between bg-slate-950 px-5 py-4 text-white md:px-14">
-              <div className="text-2xl font-bold text-cyan-400">MyStore</div>
-              <nav>
-                <ul className="hidden gap-8 md:flex">
-                  <li><a className="transition hover:text-cyan-400" href="#">Home</a></li>
-                  <li><a className="transition hover:text-cyan-400" href="#shop">Shop</a></li>
-                  <li><a className="transition hover:text-cyan-400" href="#deals">Deals</a></li>
-                  <li><a className="transition hover:text-cyan-400" href="#contact">Contact</a></li>
-                </ul>
-              </nav>
-              <div className="relative text-xl">
-                🛒
-                <span className="absolute -right-3 -top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs">
-                  {cartCount}
-                </span>
-              </div>
-            </header>
+            <Header count={cartCount} />
 
             <section
-              className="flex min-h-[90vh] flex-col items-center justify-center bg-cover bg-center px-5 text-center text-white"
+              id="home"
+              className="relative flex min-h-[88vh] items-center justify-center bg-cover bg-center px-6 text-white"
               style={{
                 backgroundImage:
-                  "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1607082349566-187342175e2f')",
+                  "linear-gradient(rgba(2, 6, 23, 0.65), rgba(2, 6, 23, 0.65)), url('https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1600&q=80')",
               }}
             >
-              <h1 className="text-4xl font-bold md:text-6xl">Big Sale 30% OFF</h1>
-              <p className="mt-4">Upgrade your lifestyle with premium products</p>
-              <button
-                onClick={() => scrollToSection('shop')}
-                className="mt-8 rounded-full bg-cyan-400 px-10 py-3 text-lg font-medium text-slate-950 transition hover:scale-105 hover:bg-cyan-500"
-              >
-                Shop Now
-              </button>
+              <div className="text-center">
+                <h1 className="text-4xl font-bold md:text-6xl">Fresh Start Sale 30% OFF</h1>
+                <p className="mt-4 text-sm md:text-lg">{featuredCount} featured picks to upgrade your everyday lifestyle.</p>
+                <button onClick={goToShop} className="mt-8 rounded-full bg-cyan-400 px-10 py-3 font-semibold text-slate-950 transition hover:scale-105 hover:bg-cyan-300">Shop Now</button>
+              </div>
             </section>
 
-            <main className="space-y-20 px-5 py-16 md:px-14">
+            <main className="mx-auto max-w-6xl space-y-16 px-4 py-14 md:px-8">
               <section id="shop">
-                <h2 className="mb-10 text-center text-4xl font-bold">Shop Products</h2>
-                <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
-                  {products.map((item) => (
-                    <ProductCard key={item.id} item={item} onAdd={addToCart} />
+                <h2 className="mb-8 text-center text-3xl font-bold md:text-4xl">Shop Products</h2>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                  {catalog.map((item) => (
+                    <Card key={item.id} item={item} onAdd={handleAdd} />
                   ))}
                 </div>
               </section>
 
               <section id="deals">
-                <h2 className="mb-10 text-center text-4xl font-bold">Hot Deals</h2>
-                <div className="grid gap-8 md:grid-cols-2">
+                <h2 className="mb-8 text-center text-3xl font-bold md:text-4xl">Hot Deals</h2>
+                <div className="grid gap-6 md:grid-cols-2">
                   {deals.map((item) => (
-                    <ProductCard key={item.id} item={item} onAdd={addToCart} />
+                    <Card key={item.id} item={item} onAdd={handleAdd} isDeal />
                   ))}
                 </div>
               </section>
 
               <section id="contact">
-                <h2 className="mb-10 text-center text-4xl font-bold">Contact Us</h2>
-                <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 text-center shadow-xl">
+                <h2 className="mb-8 text-center text-3xl font-bold md:text-4xl">Contact Us</h2>
+                <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 text-center shadow-xl ring-1 ring-slate-200">
                   <p><strong>Email:</strong> support@mystore.in</p>
                   <p className="mt-2"><strong>Phone:</strong> +91 9998887776</p>
                   <p className="mt-2"><strong>Address:</strong> Sector 62, Noida Extension, Uttar Pradesh, India - 201301</p>
-                  <input className="mt-6 w-full rounded-lg border border-slate-300 px-3 py-2" type="text" placeholder="Your Name" />
-                  <input className="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2" type="email" placeholder="Your Email" />
-                  <textarea className="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2" rows="4" placeholder="Your Message"></textarea>
-                  <button className="mt-4 rounded-lg bg-slate-900 px-8 py-2 text-white transition hover:bg-cyan-500">Send Message</button>
+                  <div className="mt-6 space-y-3">
+                    <input className="w-full rounded-lg border border-slate-300 px-3 py-2" type="text" placeholder="Your Name" />
+                    <input className="w-full rounded-lg border border-slate-300 px-3 py-2" type="email" placeholder="Your Email" />
+                    <textarea className="w-full rounded-lg border border-slate-300 px-3 py-2" rows="4" placeholder="Your Message"></textarea>
+                    <button className="rounded-lg bg-slate-900 px-8 py-2 text-white transition hover:bg-cyan-500">Send Message</button>
+                  </div>
                 </div>
               </section>
             </main>
 
-            <footer className="bg-slate-950 px-6 py-8 text-center text-white">
-              MyStore | Designed with heyitsme
-            </footer>
+            <footer className="bg-slate-950 px-6 py-8 text-center text-sm text-white">MyStore | Fresh React + Tailwind storefront</footer>
           </>
         );
       }
 
-      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
     </script>
   </body>
 </html>
